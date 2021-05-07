@@ -35,6 +35,10 @@ function getBalance(statements) {
   return balance;
 }
 
+app.get('/', (req, res) => {
+  return res.json(customers);
+});
+
 app.post('/accounts', (req, res) => {
   const { cpf, name } = req.body;
 
@@ -114,6 +118,37 @@ app.get('/statements/date', (req, res) => {
   );
 
   return res.json(statement);
+});
+
+app.put('/accounts', (req, res) => {
+  const { customer } = req;
+  const { name } = req.body;
+
+  customer.name = name;
+
+  return res.json(customer)
+});
+
+app.get('/accounts', (req, res) => {
+  const { customer } = req;
+
+  return res.json(customer)
+});
+
+app.delete('/accounts', (req, res) => {
+  const { customer } = req;
+
+  customers.splice(customers.indexOf(customer), 1);
+
+  return res.status(200).send();
+});
+
+app.get('/balances', (req, res) => {
+  const { customer } = req;
+
+  const balance = getBalance(customer.statements);
+
+  return res.json({balance})
 });
 
 app.listen(3333);
